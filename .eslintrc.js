@@ -7,7 +7,7 @@ module.exports = {
       Promise: "readonly"
     },
     parser: '@typescript-eslint/parser',
-    plugins: ["@typescript-eslint"],
+    plugins: ["@typescript-eslint", "prettier"],
     overrides: [
       {
         files: ['*.ts', '*.tsx'], // Your TypeScript files extension
