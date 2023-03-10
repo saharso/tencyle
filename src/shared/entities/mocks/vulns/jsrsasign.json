@@ -1,0 +1,608 @@
+{
+  "vulns": [
+    {
+      "id": "GHSA-27fj-mc8w-j9wg",
+      "summary": "RSA signature validation vulnerability on maleable encoded message in jsrsasign",
+      "details": "### Impact\nVulnerable jsrsasign will accept RSA signature with improper PKCS#1.5 padding.\nDecoded RSA signature value consists following form:\n01(ff...(8 or more ffs)...ff)00[ASN.1 OF DigestInfo]\nIts byte length shall be the same as RSA key length however such checking was not sufficient.\n\nTo make crafted message for practical attack is very hard.\n\n### Patches\nUsers validating RSA signature should upgrade to 10.2.0 or later.\n\n### Workarounds\nThere is no workaround. Not to use RSA signature validation in jsrsasign.\n\n### ACKNOWLEDGEMENT\nThanks to Daniel Yahyazadeh @yahyazadeh for reporting and analyzing this vulnerability.",
+      "aliases": ["CVE-2021-30246"],
+      "modified": "2021-04-15T16:17:08Z",
+      "published": "2021-04-16T19:52:35Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-347"],
+        "severity": "CRITICAL",
+        "github_reviewed": true,
+        "github_reviewed_at": "2021-04-13T17:30:34Z",
+        "nvd_published_at": "2021-04-07T21:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/security/advisories/GHSA-27fj-mc8w-j9wg"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-30246"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/issues/478"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/10.1.13"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "jsrsasign",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/jsrsasign"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "10.2.0"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2021/04/GHSA-27fj-mc8w-j9wg/GHSA-27fj-mc8w-j9wg.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-3fvg-4v2m-98jf",
+      "summary": "JWS and JWT signature validation vulnerability with special characters",
+      "details": "### Impact\n\nJsrsasign supports JWS(JSON Web Signatures) and JWT(JSON Web Token) validation. However JWS or JWT signature with non Base64URL encoding special characters or number escaped characters may be validated as valid by mistake.\n\nFor example, even if a string of non Base64URL encoding characters such as `!@$%` or `\\11` is inserted into a valid JWS or JWT signature value string, it will still be a valid JWS or JWT signature by mistake.\n\nWhen jsrsasign's JWS or JWT validation is used in OpenID connect or OAuth2, this vulnerability will affect to authentication or authorization.\n\nBy our internal assessment, CVSS 3.1 score will be 8.6.\nCVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:N\n\n### Patches\nUsers validate JWS or JWT signatures should upgrade to 10.5.25.\n\n### Workarounds\nValidate JWS or JWT signature if it has Base64URL and dot safe string before\nexecuting JWS.verify() or JWS.verifyJWT() method.\n\n### ACKNOWLEDGEMENT\n\nThanks to Adi Malyanker and Or David for this vulnerability report. Also thanks for [Snyk security team](https://snyk.io/) for this coordination.\n\n### References\nhttps://github.com/kjur/jsrsasign/releases/tag/10.5.25\nhttps://github.com/kjur/jsrsasign/security/advisories/GHSA-3fvg-4v2m-98jf kjur's advisories\nhttps://github.com/advisories/GHSA-3fvg-4v2m-98jf github advisories\nhttps://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-25898\nhttps://kjur.github.io/jsrsasign/api/symbols/KJUR.jws.JWS.html#.verifyJWT\nhttps://kjur.github.io/jsrsasign/api/symbols/KJUR.jws.JWS.html#.verify\nhttps://kjur.github.io/jsrsasign/api/symbols/global__.html#.isBase64URLDot\nhttps://github.com/kjur/jsrsasign/wiki/Tutorial-for-JWS-verification\nhttps://github.com/kjur/jsrsasign/wiki/Tutorial-for-JWT-verification\nhttps://security.snyk.io/vuln/SNYK-JS-JSRSASIGN-2869122\n",
+      "aliases": ["CVE-2022-25898"],
+      "modified": "2022-07-05T21:25:54Z",
+      "published": "2022-06-25T07:19:06Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-347"],
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2022-06-25T07:19:06Z",
+        "nvd_published_at": "2022-07-01T20:15:00Z"
+      },
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-25898"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/commit/4536a6e9e8bcf1a644ab7c07ed96e453347dae41"
+        },
+        {
+          "type": "WEB",
+          "url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-25898"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/kjur/jsrsasign"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/10.5.25"
+        },
+        {
+          "type": "WEB",
+          "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSBOWER-2935898"
+        },
+        {
+          "type": "WEB",
+          "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSBOWERGITHUBKJUR-2935897"
+        },
+        {
+          "type": "WEB",
+          "url": "https://snyk.io/vuln/SNYK-JAVA-ORGWEBJARSNPM-2935896"
+        },
+        {
+          "type": "WEB",
+          "url": "https://snyk.io/vuln/SNYK-JS-JSRSASIGN-2869122"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "jsrsasign",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/jsrsasign"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.8.0"
+                },
+                {
+                  "fixed": "10.5.25"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/06/GHSA-3fvg-4v2m-98jf/GHSA-3fvg-4v2m-98jf.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:N"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-g753-jx37-7xwh",
+      "summary": "ECDSA signature vulnerability of Minerva timing attack in jsrsasign",
+      "details": "### Impact\nECDSA side-channel attack named [Minerava](https://minerva.crocs.fi.muni.cz/) have been found and it was found that it affects to jsrsasign.\n\nExecution time of thousands signature generation have been observed then EC private key which is scalar value may be recovered since point and scalar multiplication time depends on bits of scalar. In jsrsasign 8.0.13 or later, execution time of EC point and scalar multiplication is almost constant and fixed for the issue.\n\n- Minerva is one of timing attack or side channel attack for EC.\n- If you don't use ECDSA class, you are not affected the vulnerability.\n- The vulnerability is that attacker may guess private key by checking processing time of EC key generation or ECDSA signing.\n- The cause issue is that point multiplication processing time in ECDSA signing is depends on private key value.\n- After 8.0.13, processing time of point multiplication in ECDSA signing have become constant for key value in theory.\n\n### Patches\nUsers using ECDSA signature generation should upgrade to 8.0.13 or later.\n\n### Workarounds\nThere is no workarounds in jsrsasign. Update jsrsasign or use other ECDSA library.\n\n### ACKNOWLEDGEMENT\nThanks to Jan Jancar @J08nY, Petr Svenda and Vladimir Sedlacek of Masaryk University in Czech Republic to find and report this vulnerability.\n\n### References\nhttps://minerva.crocs.fi.muni.cz/\nhttps://www.npmjs.com/advisories/1505\nhttps://github.com/kjur/jsrsasign/issues/411",
+      "modified": "2021-09-22T18:43:42Z",
+      "published": "2020-06-30T16:05:08Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-362"],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2020-06-29T19:33:15Z",
+        "nvd_published_at": null
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/security/advisories/GHSA-g753-jx37-7xwh"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/issues/411"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/commit/9dcb89c57408a3d4b5b66aa9138426bd92819e73"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/kjur/jsrsasign"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/8.0.13"
+        },
+        {
+          "type": "WEB",
+          "url": "https://minerva.crocs.fi.muni.cz/"
+        },
+        {
+          "type": "WEB",
+          "url": "https://snyk.io/vuln/SNYK-JS-JSRSASIGN-561755"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.npmjs.com/advisories/1505"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "jsrsasign",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/jsrsasign"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "8.0.13"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2020/06/GHSA-g753-jx37-7xwh/GHSA-g753-jx37-7xwh.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:A/AC:H/PR:N/UI:N/S:U/C:L/I:H/A:N"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-h87q-g2wp-47pj",
+      "summary": "Signatures are mistakenly recognized to be valid in jsrsasign",
+      "details": "In the jsrsasign package through 10.1.13 for Node.js, some invalid RSA PKCS#1 v1.5 signatures are mistakenly recognized to be valid. NOTE: there is no known practical attack.",
+      "modified": "2022-02-15T01:51:57Z",
+      "published": "2022-02-09T22:41:19Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-347"],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2021-04-08T20:09:58Z",
+        "nvd_published_at": null
+      },
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-30246"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/issues/478"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/10.1.13"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/10.2.0"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "jsrsasign",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/jsrsasign"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "10.2.0"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/02/GHSA-h87q-g2wp-47pj/GHSA-h87q-g2wp-47pj.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0"
+    },
+    {
+      "id": "GHSA-p8c3-7rj8-q963",
+      "summary": "ECDSA signature validation vulnerability by accepting wrong ASN.1 encoding in jsrsasign",
+      "details": "### Impact\nJsrsasign supports ECDSA signature validation which signature value is represented by ASN.1 DER encoding. This vulnerablity may accept a wrong ASN.1 DER encoded ECDSA signature such as:\n\n- wrong multi-byte ASN.1 length of TLV (ex. 0x820045 even though 0x45 is correct)\n- prepending zeros with ASN.1 INTEGER value (ex. 0x00000123 even though 0x0123 is correct)\n- appending zeros to signature of ASN.1 TLV (ex. 0x3082....1fbc000000 even though 0x3082....1fbc, appending zeros are ignored.)\n\nThis vulnerability was fixed by strict ASN.1 DER checking. \n\nHere is an assessment of this vulnerability:\n\n- If you are not use ECDSA signature validation, this vulnerability is not affected.\n- Not ASN.1 format signature like just concatenation of R and S value is not affected such as Bitcoin.\n- This vulnerability is affected to all ECC curve parameters.\n- Risk to accept a forged or crafted message to be signed is low.\n- Risk to raise memory corruption is low since jsrsasign uses BigInteger class.\n- ECDSA signatures semantically the same to valid one may be accepted as valid. There are many malleable variants.\n\nAs discussed [here](https://crypto.stackexchange.com/questions/24862/ber-or-der-x9-62-for-ecdsa-signature), there is no standards like X9.62 which requires ASN.1 DER. So ASN.1 BER can be applied to ECDSA however most of implementations like OpenSSL do strict ASN.1 DER checking.\n\n### Patches\nUsers using ECDSA signature validation should upgrade to 8.0.19.\n\n### Workarounds\nDo strict ASN.1 DER checking for ASN.1 encoded ECDSA signature value.\n\n### References\nhttps://nvd.nist.gov/vuln/detail/CVE-2020-14966\nhttps://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-14966\nhttps://vuldb.com/?id.157123\nhttps://github.com/kjur/jsrsasign/issues/437\nhttps://kjur.github.io/jsrsasign/api/symbols/KJUR.crypto.ECDSA.html\nhttps://kjur.github.io/jsrsasign/api/symbols/ASN1HEX.html#.checkStrictDER\nhttps://www.itu.int/rec/T-REC-X.690\n\n",
+      "aliases": ["CVE-2020-14966"],
+      "modified": "2023-01-31T01:29:53Z",
+      "published": "2020-06-26T16:54:15Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-347"],
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2020-06-26T16:54:00Z",
+        "nvd_published_at": "2020-06-22T12:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/security/advisories/GHSA-p8c3-7rj8-q963"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-14966"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/issues/437"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/commit/6087412d072a57074d3c4c1b40bdde0460d53a7f"
+        },
+        {
+          "type": "WEB",
+          "url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-14966"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/kjur/jsrsasign"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/8.0.17"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/8.0.18"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/api/symbols/ASN1HEX.html#.checkStrictDER"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/api/symbols/KJUR.crypto.ECDSA.html"
+        },
+        {
+          "type": "WEB",
+          "url": "https://security.netapp.com/advisory/ntap-20200724-0001/"
+        },
+        {
+          "type": "WEB",
+          "url": "https://vuldb.com/?id.157123"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.npmjs.com/package/jsrsasign"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "jsrsasign",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/jsrsasign"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "8.0.19"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2020/06/GHSA-p8c3-7rj8-q963/GHSA-p8c3-7rj8-q963.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-q3gh-5r98-j4h3",
+      "summary": "RSA-PSS signature validation vulnerability by prepending zeros in jsrsasign",
+      "details": "### Impact\nJsrsasign can verify RSA-PSS signature which value can expressed as BigInteger. When there is a valid RSA-PSS signature value, this vulnerability is also accept value with prepending zeros as a valid signature.\n\n- If you are not use RSA-PSS signature validation, this vulnerability is not affected. \n- Risk to accept a forged or crafted message to be signed is low.\n- Risk to raise memory corruption is low since jsrsasign uses BigInteger class.\n\n### Patches\nUsers using RSA-PSS signature validation should upgrade to 8.0.17.\n\n### Workarounds\nReject RSA-PSS signatures with unnecessary prepending zeros.\n\n### References\nhttps://github.com/kjur/jsrsasign/security/advisories/GHSA-q3gh-5r98-j4h3\n[https://github.com/kjur/jsrsasign/issues/438](https://github.com/kjur/jsrsasign/issues/438)\nhttps://nvd.nist.gov/vuln/detail/CVE-2020-14968\nhttps://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-14968\nhttps://vuldb.com/?id.157125\nhttps://kjur.github.io/jsrsasign/api/symbols/RSAKey.html#.verifyWithMessageHashPSS\n\n",
+      "aliases": ["CVE-2020-14968"],
+      "modified": "2023-01-27T21:41:14Z",
+      "published": "2020-06-26T16:26:50Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-119"],
+        "severity": "CRITICAL",
+        "github_reviewed": true,
+        "github_reviewed_at": "2020-06-26T16:19:52Z",
+        "nvd_published_at": "2020-06-22T12:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/security/advisories/GHSA-q3gh-5r98-j4h3"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-14968"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/issues/438"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/commit/3bcc088c727658d7235854cd2a409a904cc2ce99"
+        },
+        {
+          "type": "WEB",
+          "url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-14968"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/kjur/jsrsasign"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/8.0.17"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/8.0.18"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/api/symbols/RSAKey.html#.verifyWithMessageHashPSS"
+        },
+        {
+          "type": "WEB",
+          "url": "https://security.netapp.com/advisory/ntap-20200724-0001/"
+        },
+        {
+          "type": "WEB",
+          "url": "https://vuldb.com/?id.157125"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.npmjs.com/advisories/1541"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.npmjs.com/package/jsrsasign"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "jsrsasign",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/jsrsasign"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "3.0.0"
+                },
+                {
+                  "fixed": "8.0.17"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "last_known_affected_version_range": "< 8.0.16",
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2020/06/GHSA-q3gh-5r98-j4h3/GHSA-q3gh-5r98-j4h3.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-xxxq-chmp-67g4",
+      "summary": "RSA PKCS#1 decryption vulnerability with prepending zeros in jsrsasign",
+      "details": "### Impact\nJsrsasign supports RSA PKCS#1 v1.5 (i.e. RSAES-PKCS1-v1_5) and RSA-OAEP encryption and decryption. Its encrypted message is represented as BigInteger. When there is a valid encrypted message, a crafted message with prepending zeros can be decrypted by this vulnerability.\n\n- If you don't use RSA PKCS1-v1_5 or RSA-OAEP decryption, this vulnerability is not affected.\n- Risk to forge contents of encrypted message is very low.\n- Risk to raise memory corruption is low since jsrsasign uses BigInteger class.\n\n### Patches\nUsers using RSA PKCS1-v1_5 or RSA-OAEP decryption should upgrade to 8.0.18.\n\n### Workarounds\nReject RSA PKCS1-v1_5 or RSA-OAEP encrypted message with unnecessary prepending zeros.\n\n### References\nhttps://nvd.nist.gov/vuln/detail/CVE-2020-14967\nhttps://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-14967\nhttps://vuldb.com/?id.157124\nhttps://kjur.github.io/jsrsasign/api/symbols/KJUR.crypto.Cipher.html#.decrypt\nhttps://github.com/kjur/jsrsasign/issues/439\n\n\n\n",
+      "aliases": ["CVE-2020-14967"],
+      "modified": "2023-01-31T01:29:40Z",
+      "published": "2020-06-26T16:27:08Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-119"],
+        "severity": "CRITICAL",
+        "github_reviewed": true,
+        "github_reviewed_at": "2020-06-26T16:26:32Z",
+        "nvd_published_at": "2020-06-22T12:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/security/advisories/GHSA-xxxq-chmp-67g4"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-14967"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/issues/439"
+        },
+        {
+          "type": "WEB",
+          "url": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-14967"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/kjur/jsrsasign"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/8.0.17"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/kjur/jsrsasign/releases/tag/8.0.18"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/"
+        },
+        {
+          "type": "WEB",
+          "url": "https://kjur.github.io/jsrsasign/api/symbols/KJUR.crypto.Cipher.html#.decrypt"
+        },
+        {
+          "type": "WEB",
+          "url": "https://security.netapp.com/advisory/ntap-20200724-0001/"
+        },
+        {
+          "type": "WEB",
+          "url": "https://vuldb.com/?id.157124"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.npmjs.com/package/jsrsasign"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "jsrsasign",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/jsrsasign"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "8.0.18"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2020/06/GHSA-xxxq-chmp-67g4/GHSA-xxxq-chmp-67g4.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+        }
+      ]
+    }
+  ]
+}
