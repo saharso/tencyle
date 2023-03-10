@@ -1,0 +1,14 @@
+[
+  "express",
+  "async",
+  "lodash",
+  "cloudinary",
+  "axios",
+  "dojo",
+  "merge",
+  "jquery-ui",
+  "next-auth",
+  "ckeditor4",
+  "jsrsasign",
+  "tinymce"
+]

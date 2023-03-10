@@ -1,0 +1,659 @@
+{
+  "vulns": [
+    {
+      "id": "GHSA-f9wg-5f46-cjmw",
+      "summary": "NextAuth.js default redirect callback vulnerable to open redirects",
+      "details": "`next-auth` v3 users before version 3.29.2 are impacted. (We recommend upgrading to v4 in most cases. See our [migration guide](https://next-auth.js.org/getting-started/upgrade-v4)).`next-auth` v4 users before version 4.3.2 are impacted. Upgrading to 3.29.2 or 4.3.2 will patch this vulnerability. If you are not able to upgrade for any reason, you can add a configuration to your `callbacks` option:\n\n```js\n// async redirect(url, baseUrl) { // v3\nasync redirect({ url, baseUrl }) { // v4\n    // Allows relative callback URLs\n    if (url.startsWith(\"/\")) return new URL(url, baseUrl).toString()\n    // Allows callback URLs on the same origin\n    else if (new URL(url).origin === baseUrl) return url\n    return baseUrl\n}\n```\nIf you already have a `redirect` callback, make sure that you match the incoming `url` origin against the `baseUrl`.",
+      "aliases": ["CVE-2022-24858"],
+      "modified": "2022-04-22T20:49:09Z",
+      "published": "2022-04-22T20:49:09Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-290", "CWE-601"],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2022-04-22T20:49:09Z",
+        "nvd_published_at": "2022-04-19T23:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/security/advisories/GHSA-f9wg-5f46-cjmw"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-24858"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/commit/6e15bdcb2d93c1ad5ee3889f702607637e79db50"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/nextauthjs/next-auth"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/releases/tag/next-auth%40v4.3.2"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/configuration/callbacks#redirect-callback"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/getting-started/upgrade-v4"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "3.29.2"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/04/GHSA-f9wg-5f46-cjmw/GHSA-f9wg-5f46-cjmw.json"
+          }
+        },
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "4.3.2"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/04/GHSA-f9wg-5f46-cjmw/GHSA-f9wg-5f46-cjmw.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-g5fm-jp9v-2432",
+      "summary": "Improper Handling of `callbackUrl` parameter in next-auth",
+      "details": "### Impact\n\nAn attacker can send a request to an app using NextAuth.js with an invalid `callbackUrl` query parameter, which internally we convert to a `URL` object. The URL instantiation would fail due to a malformed URL being passed into the constructor, causing it to throw an unhandled error which led to our **API route handler timing out and logging in to fail**. This has been remedied in the following releases:\n\nnext-auth v3 users before version 3.29.5 are impacted. (We recommend upgrading to v4, as v3 is considered unmaintained. See our [migration guide](https://next-auth.js.org/getting-started/upgrade-v4))\n\nnext-auth v4 users before version 4.5.0 are impacted.\n\n### Patches\n\nWe've released patches for this vulnerability in:\n  \n- v3 - `3.29.5`\n- v4 - `4.5.0`\n\nYou can do:\n\n```sh\nnpm i next-auth@latest\n```\n\nor\n\n```sh\nyarn add next-auth@latest\n```\n\nor\n\n```sh\npnpm add next-auth@latest\n```\n\n(This will update to the latest v4 version, but you can change  `latest` to `3` if you want to stay on v3. This is not recommended.)\n\n### Workarounds\n\nIf for some reason you cannot upgrade, the workaround requires you to rely on [Advanced Initialization](https://next-auth.js.org/configuration/initialization#advanced-initialization). Here is an example:\n\n**Before:**\n\n```js\n// pages/api/auth/[...nextauth].js\nimport NextAuth from \"next-auth\"\n\nexport default NextAuth(/* your config */)\n```\n\n**After:**\n\n```js\n// pages/api/auth/[...nextauth].js\nimport NextAuth from \"next-auth\"\n\nfunction isValidHttpUrl(url) {\n  try {\n    return /^https?:/.test(url).protocol\n  } catch {\n    return false;\n  }\n}\n\nexport default async function handler(req, res) {\n  if (\n    req.query.callbackUrl &&\n    !isValidHttpUrl(req.query.callbackUrl)\n  ) {\n   return res.status(500).send('');\n  }\n  \n  return await NextAuth(req, res, /* your config */)\n}\n```\n\n\n### References\n\nThis vulnerability was discovered not long after https://github.com/nextauthjs/next-auth/security/advisories/GHSA-q2mx-j4x2-2h74 was published and is very similar in nature.\n\nRelated documentation:\n\n- https://next-auth.js.org/getting-started/client#specifying-a-callbackurl\n- https://next-auth.js.org/configuration/callbacks#redirect-callback\n\nA test case has been added so this kind of issue will be checked before publishing. See: https://github.com/nextauthjs/next-auth/commit/e498483b23273d1bfc81be68339607f88d411bd6\n\n### For more information\n\nIf you have any concerns, we request responsible disclosure, outlined here: https://next-auth.js.org/security#reporting-a-vulnerability\n\n### Timeline\n\nThe issue was reported 2022 June 10th, a response was sent out to the reporter in less than 2 hours, and a patch was published within 3 hours.",
+      "aliases": ["CVE-2022-31093"],
+      "modified": "2022-07-08T17:05:36Z",
+      "published": "2022-06-21T20:06:36Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-754"],
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2022-06-21T20:06:36Z",
+        "nvd_published_at": "2022-06-27T22:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/security/advisories/GHSA-g5fm-jp9v-2432"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-31093"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/commit/25517b73153332d948114bacdff3b5908de91d85"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/commit/e498483b23273d1bfc81be68339607f88d411bd6"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/nextauthjs/next-auth"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/configuration/initialization#advanced-initialization"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "3.29.5"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/06/GHSA-g5fm-jp9v-2432/GHSA-g5fm-jp9v-2432.json"
+          }
+        },
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "4.5.0"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/06/GHSA-g5fm-jp9v-2432/GHSA-g5fm-jp9v-2432.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-p6mm-27gq-9v3p",
+      "summary": "next-auth before v4.10.2 and v3.29.9 leaks excessive information into log",
+      "details": "### Impact\nAn information disclosure vulnerability in `next-auth` before `v4.10.2` and `v3.29.9` allows an attacker with log access privilege to obtain excessive information such as an identity provider's secret in the log (which is thrown during OAuth error handling) and use it to leverage further attacks on the system, like impersonating the client to ask for extensive permissions.\n\n### Patches\nWe patched this vulnerability in `v4.10.2` and `v3.29.9` by moving the log for `provider` information to the debug level. In addition, we added a warning for having the `debug: true` option turned on in production and documented it [here](https://next-auth.js.org/warnings#debug_enabled).\n> You have enabled the debug option. It is meant for development only, to help you catch issues in your authentication flow and you should consider removing this option when deploying to production. One way of only allowing debugging while not in production is to set debug: process.env.NODE_ENV !== \"production\", so you can commit this without needing to change the value.\n> \n> If you want to log debug messages during production anyway, we recommend setting the [logger option](https://next-auth.js.org/configuration/options#logger) with proper sanitization of potentially sensitive user information.\n\nTo upgrade:\n\n```sh\nnpm i next-auth@latest\n# or\nyarn add next-auth@latest\n# or\npnpm add next-auth@latest\n```\n(This will update to the latest v4 version, but you can change `latest` to 3 if you want to stay on v3. This is not recommended. v3 is unmaintained.)\n\n### Workarounds\n\nIf for some reason you cannot upgrade, you can user the `logger` configuration option by sanitizing the logs:\n```ts\n// Example\nimport log from \"your-logging-service\"\nexport const authOptions: NextAuthOptions = {\n  debug: process.env.NODE_ENV !== \"production\",\n  logger: {\n    error: (code, metadata) => {\n      if (!(metadata instanceof Error) &&  metadata.provider) {\n        // redact the provider secret here\n        delete metadata.provider\n        log.error(code, metadata)\n      } else {\n        log.error(code, metadata)\n      }\n    }\n  },\n}\n```\n\n### References\nRelated documentation:\n- https://next-auth.js.org/warnings#debug_enabled\n- https://next-auth.js.org/configuration/options#logger \n- https://next-auth.js.org/getting-started/upgrade-v4\n\n### For more information\nIf you have any concerns, we request responsible disclosure, outlined here: https://next-auth.js.org/security#reporting-a-vulnerability\n\n### Timeline\nThe issue was reported 18th of July, a response was sent out in less than 20 minutes and after identifying the issue a patch was published within a week.",
+      "aliases": ["CVE-2022-31186"],
+      "modified": "2022-08-06T05:29:45Z",
+      "published": "2022-08-06T05:29:45Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-532"],
+        "severity": "LOW",
+        "github_reviewed": true,
+        "github_reviewed_at": "2022-08-06T05:29:45Z",
+        "nvd_published_at": "2022-08-01T20:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/security/advisories/GHSA-p6mm-27gq-9v3p"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-31186"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/nextauthjs/next-auth"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/configuration/options#logger"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/getting-started/upgrade-v4"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/warnings#debug_enabled"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "3.29.9"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/08/GHSA-p6mm-27gq-9v3p/GHSA-p6mm-27gq-9v3p.json"
+          }
+        },
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "4.10.2"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/08/GHSA-p6mm-27gq-9v3p/GHSA-p6mm-27gq-9v3p.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-pg53-56cg-4m8q",
+      "summary": "Token verification bug in next-auth",
+      "details": "### Impact\n\nImplementations using the **Prisma database adapter** with the **Email provider** **are impacted**.\n\nImplementations using the Prisma database adapter that are not using the Email provider are not impacted.\nImplementations using the default database adapter (TypeORM) with the Email provider are not impacted.\nImplementations not using a database are not impacted.\n\n### Patches\n\nThis issue is fixed in 3.3.0 and newer versions.\n\n### Workarounds\n\nThose not able to upgrade can alternatively disable the Email provider as a workaround.\n\n### Description\n\nThe Prisma database adapter was checking the verification token but not the identifier (the email address associated with the token). This made it possible to use a valid token assigned to one user, to sign in as another user when using the Prima adapter in conjunction with the Email provider. The defect is specific to the community-supported Prisma database adapter in versions <3.3.0 and is not present in the default database adapter (TypeORM).\n\n*Note:  The current community-supported adapter was not developed by Prisma.*\n\nThe defect was a problem in the implementation of verification function the adapter and is not directly related to Prisma.\n\nThe flaw may exist in other third party database adapters that do not check both the identifier and token values.\n\nThe design of the database adapter API may be revised in future to help reduce the likelyhood of similar defects.\n\n### Timeline\n\nOn Monday (2021-02-08) we were notified via responsible disclosure by Alessandro Angelino (@AlessandroA) of a flaw in the implementation of the Prisma database adapter included with NextAuth.js. A detailed write up and proof of concept were provided.\n\nThe following day (2021-02-09) we published a fix in v3.3.0 and confirmed through internal testing, and with Alessandro, that the issue was resolved in the new release and prompted users to upgrade.\n\nOn 2021-02-10 we received a CVE ID and published this advisory within a few hours of notification.\n\nWe would like to thank Alessandro for using responsible disclose to allow us to address the issue promptly and publish this advisory once an update was available that resolved the issue and Balázs Orbán (@balazsorban44) for facilitating a timely release of the fix.",
+      "aliases": ["CVE-2021-21310"],
+      "modified": "2021-02-22T20:43:03Z",
+      "published": "2021-02-11T21:36:24Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-290"],
+        "severity": "LOW",
+        "github_reviewed": true,
+        "github_reviewed_at": "2021-02-11T21:36:12Z",
+        "nvd_published_at": "2021-02-11T22:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/security/advisories/GHSA-pg53-56cg-4m8q"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-21310"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/releases/tag/v3.3.0"
+        },
+        {
+          "type": "WEB",
+          "url": "https://www.npmjs.com/package/next-auth"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "3.3.0"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2021/02/GHSA-pg53-56cg-4m8q/GHSA-pg53-56cg-4m8q.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0"
+    },
+    {
+      "id": "GHSA-pgjx-7f9g-9463",
+      "summary": "Improper handling of email input",
+      "details": "### Impact\n\nAn attacker can pass a compromised input to the e-mail [signin endpoint](https://next-auth.js.org/getting-started/rest-api#post-apiauthsigninprovider) that contains some malicious HTML, tricking the e-mail server to send it to the user, so they can perform a phishing attack. Eg.: `balazs@email.com, <a href=\"http://attacker.com\">Before signing in, claim your money!</a>`. This was previously sent to `balazs@email.com`, and the content of the email containing a link to the attacker's site was rendered in the HTML. This has been remedied in the following releases, by simply not rendering that e-mail in the HTML, since it should be obvious to the receiver what e-mail they used:\n\nnext-auth v3 users before version 3.29.8 are impacted. (We recommend upgrading to v4, as v3 is considered unmaintained. See our [migration guide](https://next-auth.js.org/getting-started/upgrade-v4))\n\nnext-auth v4 users before version 4.8.0 are impacted.\n\n### Patches\n\nWe've released patches for this vulnerability in:\n  \n- v3 - `3.29.8`\n- v4 - `4.9.0`\n\nYou can do:\n\n```sh\nnpm i next-auth@latest\n# or\nyarn add next-auth@latest\n#\npnpm add next-auth@latest\n```\n\n(This will update to the latest v4 version, but you can change  `latest` to `3` if you want to stay on v3. This is not recommended.)\n\n### Workarounds\n\nIf for some reason you cannot upgrade, the workaround requires you to sanitize the `email` parameter that is passed to `sendVerificationRequest` and rendered in the HTML. If you haven't created a custom `sendVerificationRequest`, you only need to upgrade. Otherwise, make sure to either exclude `email` from the HTML body or efficiently sanitize it. Check out https://next-auth.js.org/providers/email#customizing-emails\n\n### References\n\n\nRelated documentation:\n\n- https://next-auth.js.org/providers/email#customizing-emails\n- https://next-auth.js.org/getting-started/upgrade-v4\n\nA test case has been added so this kind of issue will be checked before publishing. See: https://github.com/nextauthjs/next-auth/blob/cd6ccfde898037290ae949d500ace8a378376cd8/packages/next-auth/tests/email.test.ts\n\n### For more information\n\nIf you have any concerns, we request responsible disclosure, outlined here: https://next-auth.js.org/security#reporting-a-vulnerability\n\n### Timeline\n\nThe issue was reported 2022 June 29th, a response was sent out to the reporter in less than 1 hour, and after identifying the issue a patch was published within 4 working days.",
+      "aliases": ["CVE-2022-31127"],
+      "modified": "2022-07-06T19:27:45Z",
+      "published": "2022-07-06T19:27:45Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-79"],
+        "severity": "HIGH",
+        "github_reviewed": true,
+        "github_reviewed_at": "2022-07-06T19:27:45Z",
+        "nvd_published_at": "2022-07-06T18:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/security/advisories/GHSA-pgjx-7f9g-9463"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-31127"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/commit/ae834f1e08a4a9915665eecb9479c74c6b039c9c"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/nextauthjs/next-auth"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/releases/tag/next-auth%40v4.9.0"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/getting-started/upgrade-v4"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/providers/email#customizing-emails"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "3.29.8"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/07/GHSA-pgjx-7f9g-9463/GHSA-pgjx-7f9g-9463.json"
+          }
+        },
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "4.9.0"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/07/GHSA-pgjx-7f9g-9463/GHSA-pgjx-7f9g-9463.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:L"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-q2mx-j4x2-2h74",
+      "summary": "URL Redirection to Untrusted Site ('Open Redirect') in next-auth",
+      "details": "### Impact\n\nWe found that this vulnerability is present when the developer is implementing an OAuth 1 provider (by extension, it means Twitter, which is the only built-in provider using OAuth 1), but **upgrading** is **still recommended**.\n\n`next-auth` v3 users before version 3.29.3 are impacted. (We recommend upgrading to v4, as v3 is considered unmaintained. See our [migration guide](https://next-auth.js.org/getting-started/upgrade-v4))\n\n`next-auth` v4 users before version 4.3.3 are impacted.\n\n### Patches\n\nWe've released patches for this vulnerability in:\n  \n- v3 - `3.29.3`\n- v4 - `4.3.3`\n\nYou can do:\n\n```sh\nnpm i next-auth@latest\n```\n\nor\n\n```sh\nyarn add next-auth@latest\n```\n\nor\n\n```sh\npnpm add next-auth@latest\n```\n\n(This will update to the latest v4 version, but you can change  `latest` to `3` if you want to stay on v3.)\n\n### Workarounds\n\nIf you are not able to upgrade for any reason, you can add the following configuration to your `callbacks` option:\n\n```ts\n// async redirect(url, baseUrl) { // v3\nasync redirect({ url, baseUrl }) { // v4\n    // Allows relative callback URLs\n    if (url.startsWith(\"/\")) return `${baseUrl}${url}`\n    // Allows callback URLs on the same origin\n    else if (new URL(url).origin === baseUrl) return url\n    return baseUrl\n}\n```\n\n### References\n\nThis vulnerability was discovered right after https://github.com/nextauthjs/next-auth/security/advisories/GHSA-f9wg-5f46-cjmw was published and is very similar in nature.\n\nRead more about the `callbacks.redirect` option in the documentation: https://next-auth.js.org/configuration/callbacks#redirect-callback\n\n### For more information\n\nIf you have any concerns, we request responsible disclosure, outlined here: https://next-auth.js.org/security#reporting-a-vulnerability\n\n### Timeline\n\nThe issue was reported 2022 April 20th, a response was sent out to the reporter 8 minutes after, and a patch was produced within a few days.",
+      "aliases": ["CVE-2022-29214"],
+      "modified": "2022-05-24T22:03:07Z",
+      "published": "2022-05-24T22:03:07Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-601"],
+        "severity": "MODERATE",
+        "github_reviewed": true,
+        "github_reviewed_at": "2022-05-24T22:03:07Z",
+        "nvd_published_at": "2022-05-21T00:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/security/advisories/GHSA-q2mx-j4x2-2h74"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-29214"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/nextauthjs/next-auth"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/releases/tag/next-auth%40v4.3.3"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "3.29.3"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/05/GHSA-q2mx-j4x2-2h74/GHSA-q2mx-j4x2-2h74.json"
+          }
+        },
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "4.3.3"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/05/GHSA-q2mx-j4x2-2h74/GHSA-q2mx-j4x2-2h74.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+        }
+      ]
+    },
+    {
+      "id": "GHSA-xv97-c62v-4587",
+      "summary": "NextAuth.js before 4.10.3 and 3.29.10 sending verification requests (magic link) to unwanted emails",
+      "details": "### Impact\n`next-auth` users who are using the `EmailProvider` either in versions before `4.10.3` or `3.29.10` are affected.\n\nIf an attacker could forge a request that sent a comma-separated list of emails (eg.: `attacker@attacker.com,victim@victim.com`) to the sign-in endpoint, NextAuth.js would send emails to both the attacker and the victim's e-mail addresses. The attacker could then login as a newly created user with the email being `attacker@attacker.com,victim@victim.com`. This means that basic authorization like `email.endsWith(\"@victim.com\")` in the `signIn` callback would fail to communicate a threat to the developer and would let the attacker bypass authorization, even with an `@attacker.com` address.\n\n### Patches\nWe patched this vulnerability in `v4.10.3` and `v3.29.10` by normalizing the email value that is sent to the sign-in endpoint before accessing it anywhere else. We also added a `normalizeIdentifier` callback on the `EmailProvider` configuration, where you can further tweak your requirements for what your system considers a valid e-mail address. (E.g.: strict RFC2821 compliance)\n\nTo upgrade, run one of the following:\n```sh\nnpm i next-auth@latest\n```\n```sh\nyarn add next-auth@latest\n```\n```sh\npnpm add next-auth@latest\n```\n\n(This will update to the latest v4 version, but you can change `latest` to `3` if you want to stay on v3. This is not recommended. v3 is unmaintained.)\n\n### Workarounds\nIf for some reason you cannot upgrade, you can normalize the incoming request like the following, using Advanced Initialization:\n```ts\n// pages/api/auth/[...nextauth].ts\n\nfunction normalize(identifier) {\n  // Get the first two elements only,\n  // separated by `@` from user input.\n  let [local, domain] = identifier.toLowerCase().trim().split(\"@\")\n  // The part before \"@\" can contain a \",\"\n  // but we remove it on the domain part\n  domain = domain.split(\",\")[0]\n  return `${local}@${domain}`\n}\n\nexport default async function handler(req, res) {\n  if (req.body.email) req.body.email = normalize(req.body.email)\n  return await NextAuth(req, res, {/* your options */ })\n}\n```\n\n### References\n- EmailProvider: https://next-auth.js.org/providers/email\n- Normalize the email address: https://next-auth.js.org/providers/email#normalizing-the-email-address\n- Email syntax: https://en.wikipedia.org/wiki/Email_address#Local-part\n- `signIn` callback: https://next-auth.js.org/configuration/callbacks#sign-in-callback\n- Advanced Initialization: https://next-auth.js.org/configuration/initialization#advanced-initialization\n- `nodemailer` address: https://nodemailer.com/message/addresses\n\n### For more information\n\nIf you have any concerns, we request responsible disclosure, outlined here: https://next-auth.js.org/security#reporting-a-vulnerability\n\n### Timeline\n\nThe issue was reported 26th of July, a response was sent out in less than 1 hour and after identifying the issue a patch was published within 5 working days.\n\n### Acknowledgments\n\nWe would like to thank [Socket](https://socket.dev) for disclosing this vulnerability in a responsible manner and following up until it got published.",
+      "aliases": ["CVE-2022-35924"],
+      "modified": "2022-08-11T22:13:10Z",
+      "published": "2022-08-02T18:00:33Z",
+      "database_specific": {
+        "cwe_ids": ["CWE-20", "CWE-863"],
+        "severity": "CRITICAL",
+        "github_reviewed": true,
+        "github_reviewed_at": "2022-08-02T18:00:33Z",
+        "nvd_published_at": "2022-08-02T18:15:00Z"
+      },
+      "references": [
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/security/advisories/GHSA-xv97-c62v-4587"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-35924"
+        },
+        {
+          "type": "WEB",
+          "url": "https://github.com/nextauthjs/next-auth/commit/afb1fcdae3cc30445038ef588e491d139b916003"
+        },
+        {
+          "type": "WEB",
+          "url": "https://en.wikipedia.org/wiki/Email_address#Local-part"
+        },
+        {
+          "type": "PACKAGE",
+          "url": "https://github.com/nextauthjs/next-auth"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/configuration/callbacks#sign-in-callback"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/configuration/initialization#advanced-initialization"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/providers/email"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/providers/email#normalizing-the-e-mail-address"
+        },
+        {
+          "type": "WEB",
+          "url": "https://next-auth.js.org/providers/email#normalizing-the-email-address"
+        },
+        {
+          "type": "WEB",
+          "url": "https://nodemailer.com/message/addresses"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "4.0.0"
+                },
+                {
+                  "fixed": "4.10.3"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/08/GHSA-xv97-c62v-4587/GHSA-xv97-c62v-4587.json"
+          }
+        },
+        {
+          "package": {
+            "name": "next-auth",
+            "ecosystem": "npm",
+            "purl": "pkg:npm/next-auth"
+          },
+          "ranges": [
+            {
+              "type": "SEMVER",
+              "events": [
+                {
+                  "introduced": "0"
+                },
+                {
+                  "fixed": "3.29.10"
+                }
+              ]
+            }
+          ],
+          "database_specific": {
+            "source": "https://github.com/github/advisory-database/blob/main/advisories/github-reviewed/2022/08/GHSA-xv97-c62v-4587/GHSA-xv97-c62v-4587.json"
+          }
+        }
+      ],
+      "schema_version": "1.3.0",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N"
+        }
+      ]
+    }
+  ]
+}
