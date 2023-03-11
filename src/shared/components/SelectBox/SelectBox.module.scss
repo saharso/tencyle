@@ -1,0 +1,61 @@
+@import "../../styles/extensions.scss";
+
+$input-height: var(--size-input-height);
+$padding-x: var(--gap-2);
+
+.Root {
+    border: 1px solid var(--grey-4);
+    height: $input-height;
+    min-width: 80px;
+    width: 200px;
+    max-width: 100%;
+    display: inline-flex;
+    border-radius: 8px;
+    font: inherit !important;
+    label[class*="Mui-focused"], &.hasValue label{
+        opacity: 0;
+    }
+    &.containerWidth {
+        width: 100%;
+    }
+    * {
+        font-family: inherit !important;
+        font-weight: inherit !important;
+    }
+    .InputRoot {
+        height: $input-height;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        input {
+            @extend %norm-input;
+            height: 100%;
+            padding: 0 !important;    
+        }
+        fieldset {
+            display: none;
+        }
+    }
+    label {
+        @extend %norm-input;
+        transition: unset;
+        transform: unset !important;
+        padding: 0 $padding-x !important;
+        line-height: $input-height;
+    }
+    .EndIcon {
+        min-width: $input-height;
+        height: $input-height;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--grey-6);
+        right: 2px !important;
+        top: 0 !important;
+        button {
+            width: $input-height;
+            height: $input-height;
+            transform: unset !important;
+            @extend %norm-button;
+        }
+    }
+}
