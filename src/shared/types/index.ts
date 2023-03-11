@@ -1,5 +1,4 @@
-import _FetchVulnSearchParams from "./FetchVulnSearchParams";
-import _SelectOption from "./SelectOption";
-
-export type FetchVulnSearchParams = _FetchVulnSearchParams;
-export type SelectOption = _SelectOption;
+export type { FetchVulnSearchParams } from "./FetchVulnSearchParams";
+export type { VulnerabilitiesGridRow } from "./VulnerabilitiesGrid";
+export type { VulnerabilityItemResponse } from "./VulnerabilitiesGrid";
+export type { VulnerabilityItemResponseData } from "./VulnerabilitiesGrid";
