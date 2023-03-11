@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Sono:wght@200;300;400;500;600&display=swap');
 @import "index";
 
+html, body, #root {
+    height: 100%;
+}
+
 html {
     @for $i from 1 through length($greys) {
         $grey: nth($greys, $i);
