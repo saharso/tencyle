@@ -36,7 +36,9 @@ export default function SelectBox({
       renderInput={(params) => <TextField {...params} label={placeholder} />}
       value={selectValue}
       onChange={(_, value) => {
-        onChange(value);
+        if (typeof value === "string") {
+          onChange(value);
+        }
       }}
       classes={{
         root: classNames(
