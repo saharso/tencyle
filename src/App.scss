@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Sono:wght@200;300;400;500;600&display=swap');
+@import "index";
+
+html {
+    @for $i from 1 through length($greys) {
+        $grey: nth($greys, $i);
+        --grey-#{$i}: #{$grey};
+    }
+    @for $i from 1 through length($gaps) {
+        $gap: $i * 4;
+        --gap-#{$i}: #{$gap}px;
+    }
+    @each $name, $size in $sizes {
+        --size-#{$name}: #{$size};
+    }
+    @each $name, $value in $font-weight {
+        --font-weight-#{$name}: #{$value};
+    }
+}
+
+body {
+    margin: 0;
+    font-family: 'Sono', sans-serif;
+    font-weight: var(--font-weight-extra-light);
+}
+
+* {
+    box-sizing: border-box;
+}
