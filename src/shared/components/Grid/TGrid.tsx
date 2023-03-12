@@ -1,15 +1,10 @@
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useRef, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef, SelectionChangedEvent } from "ag-grid-community";
 import styles from "./TGrid.module.scss";
+import classNames from "classnames";
 
 interface TGridProps<Row = unknown> {
   columns: ColDef[];
@@ -45,7 +40,11 @@ export default function TGrid({
       )}
       {loading && <div className={styles.Loading}>Loading</div>}
       <div
-        className="ag-theme-alpine"
+        className={classNames(
+          "ag-theme-alpine",
+          styles.Grid,
+          onRowClick ? styles.clickableRow : null
+        )}
         style={{
           width: "100%",
           height: "100%",
