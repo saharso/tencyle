@@ -38,11 +38,13 @@ const columns: ColDef<Partial<VulnerabilitiesGridRow>>[] = [
 interface VulnerabilitiesGridProps {
   data: VulnerabilitiesGridRow[];
   loading: boolean;
+  onRowClick: (row: VulnerabilitiesGridRow) => void;
 }
 
 export default function VulnerabilitiesGrid({
   data,
   loading,
+  onRowClick,
 }: VulnerabilitiesGridProps) {
   return (
     <TGrid
@@ -50,7 +52,7 @@ export default function VulnerabilitiesGrid({
       rows={data}
       loading={loading}
       onRowClick={(e) => {
-        console.log(e.api.getSelectedRows());
+        onRowClick(e.api.getSelectedRows()[0] as VulnerabilitiesGridRow);
       }}
     />
   );
