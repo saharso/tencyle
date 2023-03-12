@@ -19,6 +19,11 @@ function parseApi(rawData: VulnerabilityItemResponse) {
         published: item.published ? new Date(item.published) : "N/A",
         severity: item.database_specific?.severity || "N/A",
         references: item.references || "N/A",
+        schemaVersion: item.schema_version || "N/A",
+        githubReviewed: item.database_specific?.github_reviewed || false,
+        githubReviewedAt: item.database_specific?.github_reviewed_at
+          ? new Date(item.database_specific.github_reviewed_at as string)
+          : null,
       } as VulnerabilitiesGridRow;
     });
   } catch (e) {

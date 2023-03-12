@@ -12,6 +12,9 @@ export type VulnerabilitiesGridRow = {
   published: Date;
   severity: string;
   references: VulnerabilityEcternalReferance[];
+  githubReviewed: boolean;
+  githubReviewedAt: Date;
+  schemaVersion: string;
 };
 
 type Range = {
