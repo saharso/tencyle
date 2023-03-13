@@ -6,6 +6,8 @@ html, body, #root {
 }
 
 html {
+    --c1: #3e5791;
+    --white: #ffffff;
     @for $i from 1 through length($greys) {
         $grey: nth($greys, $i);
         --grey-#{$i}: #{$grey};
@@ -26,6 +28,7 @@ body {
     margin: 0;
     font-family: 'Sono', sans-serif;
     font-weight: var(--font-weight-extra-light);
+    color: var(--grey-10);
 }
 
 * {

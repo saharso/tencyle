@@ -13,9 +13,9 @@ function Main({ children }: PropsWithChildren) {
 }
 export default function HeaderMain({ children }: PropsWithChildren) {
   return (
-    <div data-test={"HeaderMain"} className={styles.HeaderMain}>
+    <article data-test={"HeaderMain"} className={styles.HeaderMain}>
       {children}
-    </div>
+    </article>
   );
 }
 

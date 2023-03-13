@@ -5,6 +5,7 @@ $padding-x: var(--gap-2);
 
 .Root {
     border: 1px solid var(--grey-4);
+    background-color: var(--white);
     height: $input-height;
     min-width: 80px;
     width: 200px;
