@@ -12,7 +12,7 @@ export default function LibrarySelectBox({
 }: {
   onQuery: (query: UseQueryResult<VulnerabilitiesGridRow[] | Error>) => void;
   onChange?: (libraryName: string) => void;
-  value: string;
+  value?: string;
 }) {
   const {
     libraryListQuery,
