@@ -36,6 +36,7 @@ export default function useLibrarySelection() {
     endPoint: EndPoints.libraryList,
   });
   const [selectedLibrary, setSelectedLibrary] = useState<string>();
+
   const { setParams, query: vulnerabilityResultQuery } = useApi<
     VulnerabilitiesGridRow[] | Error,
     VulnerabilityItemResponse
@@ -48,7 +49,11 @@ export default function useLibrarySelection() {
   const handleSetParams = useCallback((library: string) => {
     setSelectedLibrary(library);
     localStorage.setItem("library", library);
-    setParams({ package: { name: library, ecosystem: "npm" } });
+    if (library) {
+      setParams({ package: { name: library, ecosystem: "npm" } });
+    } else {
+      setParams(null);
+    }
   }, []);
 
   return {

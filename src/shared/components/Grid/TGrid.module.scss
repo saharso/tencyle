@@ -1,0 +1,19 @@
+.TGrid {
+    height: 100%;
+    .Grid {
+        --ag-selected-row-background-color:  var(--grey-4);
+        --ag-range-selection-border-color: transparent;
+        --ag-row-hover-color: var(--grey-2);
+    }
+    .clickableRow {
+        [class*="ag-cell"] {
+            cursor: pointer;
+        }
+    }
+}
+.NoRowsToShow, .Loading {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

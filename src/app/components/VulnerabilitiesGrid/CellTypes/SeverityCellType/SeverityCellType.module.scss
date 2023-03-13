@@ -1,0 +1,37 @@
+.SeverityCellType {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .Circle {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        box-shadow: 0px 0px 4px 2px var(--grey-4), -1px -2px 3px 0px rgba(255, 255, 255, 0.4) inset;
+    }
+    .Tooltip {
+        display: block;
+        padding: 0 4px 4px;
+        margin-top: 4px;
+    }
+    &.low {
+        .Circle {
+            background-color: #95c94a;
+        }        
+    }
+    &.moderate {
+        .Circle {
+            background-color: #ffcf26;
+        }
+    }
+    &.high {
+        .Circle {
+            background-color: #f38049;
+        }
+    }
+    &.critical {
+        .Circle {
+            background-color: #ee353d;
+        }
+    }
+}
