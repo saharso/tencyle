@@ -4,6 +4,7 @@
         --ag-selected-row-background-color:  var(--grey-4);
         --ag-range-selection-border-color: transparent;
         --ag-row-hover-color: var(--grey-2);
+        --ag-cell-horizontal-padding: var(--gap-3);
     }
     .clickableRow {
         [class*="ag-cell"] {
