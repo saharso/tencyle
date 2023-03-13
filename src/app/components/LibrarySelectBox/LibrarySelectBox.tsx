@@ -25,6 +25,10 @@ export default function LibrarySelectBox({
     onQuery(vulnerabilityResultQuery);
   }, [vulnerabilityResultQuery, onQuery]);
 
+  useEffect(() => {
+    handleSetParams(value);
+  }, [value]);
+
   if (!libraryListQuery?.data) {
     return <div>Loading</div>;
   }
