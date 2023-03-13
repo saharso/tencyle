@@ -1,0 +1,1 @@
+export { validVulnerabilitiesGridList } from "./validVulnerabilitiesGridList";
