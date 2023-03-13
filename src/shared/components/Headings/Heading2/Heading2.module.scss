@@ -1,4 +1,9 @@
 .Heading2 {
     margin: 0;
-    font-size: 28px;
+    font-size: var(--font-size-h2);
+    line-height: 1.4em;
+    min-height: 1.4em;
+    &::first-letter {
+        text-transform: capitalize;
+    }
 }
