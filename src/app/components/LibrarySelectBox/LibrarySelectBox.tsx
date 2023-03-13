@@ -8,9 +8,11 @@ import { VulnerabilitiesGridRow } from "../../../shared/types";
 export default function LibrarySelectBox({
   onQuery,
   onChange,
+  value,
 }: {
   onQuery: (query: UseQueryResult<VulnerabilitiesGridRow[] | Error>) => void;
   onChange?: (libraryName: string) => void;
+  value: string;
 }) {
   const {
     libraryListQuery,
@@ -34,7 +36,7 @@ export default function LibrarySelectBox({
         handleSetParams(value);
         onChange(value);
       }}
-      value={selectedLibrary}
+      value={selectedLibrary ?? value}
       placeholder="Search a library"
       endIcon={<SearchIcon />}
       containerWidth={true}
