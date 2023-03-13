@@ -1,0 +1,11 @@
+.AppHeaderWrapper {
+    background-color: var(--c1);
+    padding: var(--gap-2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .Center {
+        width: 400px;
+        max-width: 100%;
+    }
+}
