@@ -3,6 +3,8 @@ type VulnerabilityEcternalReferance = {
   url: string;
 };
 
+export type SeverityKinds = "MODERATE" | "HIGH" | "CRITICAL" | "LOW";
+
 export type VulnerabilitiesGridRow = {
   id: string;
   name: string;
@@ -10,7 +12,7 @@ export type VulnerabilitiesGridRow = {
   details: string;
   modified: Date;
   published: Date;
-  severity: string;
+  severity: SeverityKinds;
   references: VulnerabilityEcternalReferance[];
   githubReviewed: boolean;
   githubReviewedAt: Date;
