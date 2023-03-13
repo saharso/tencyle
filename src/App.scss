@@ -22,6 +22,7 @@ html {
     @each $name, $value in $font-weight {
         --font-weight-#{$name}: #{$value};
     }
+    --font-size-h2: 28px;
 }
 
 body {
